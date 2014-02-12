@@ -46,6 +46,10 @@ import org.jclouds.rest.annotations.SelectJson;
 import org.jclouds.rest.annotations.Transform;
 
 import com.google.common.util.concurrent.ListenableFuture;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.POST;
+import org.jclouds.Fallbacks.TrueOnNotFoundOr404;
+import org.jclouds.rest.annotations.PayloadParam;
 
 /**
  * Provides asynchronous access to User via their REST API.
@@ -123,4 +127,25 @@ public interface UserAsyncApi {
    @Fallback(EmptySetOnNotFoundOr404.class)
    ListenableFuture<? extends Set<? extends Role>> listRolesOfUserOnTenant(@PathParam("userId") String userId,
             @PathParam("tenantId") String tenantId);
+   
+   /** @see UserApi#add(String, String, Boolean, String) */
+   @Named("user:add")
+   @POST
+   @SelectJson("user")
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Path("/users")
+   @RequestFilters(AuthenticateRequest.class)
+   @Fallback(NullOnNotFoundOr404.class)
+   ListenableFuture<? extends User> add(@PayloadParam("username") String userName,
+                                        @PayloadParam("email") String userEmail,
+                                        @PayloadParam("enabled") boolean enabled,
+                                        @PayloadParam("OS-KSADM:password") String password);
+   
+   /** @see UserApi#delete(String) */
+   @Named("user:delete")
+   @DELETE
+   @Path("/users/{userId}")
+   @RequestFilters(AuthenticateRequest.class)
+   @Fallback(TrueOnNotFoundOr404.class)
+   ListenableFuture<Boolean> delete(@PathParam("userId") String userId);
 }

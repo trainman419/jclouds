@@ -37,6 +37,8 @@ import org.jclouds.rest.AuthorizationException;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
+import javax.ws.rs.core.MediaType;
+import org.jclouds.http.HttpRequest;
 
 /**
  * Tests parsing and Guice wiring of UserApi
@@ -190,4 +192,39 @@ public class UserApiExpectTest extends BaseKeystoneRestApiExpectTest<KeystoneApi
       assertTrue(api.listRolesOfUser("3f6c1c9ba993495ead7d2eb2192e284f").isEmpty());
    }
    
+   public void testCreateUser() {
+      UserApi api = requestsSendResponses(
+            keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess,
+            HttpRequest.builder().method("POST")
+                       .endpoint(endpoint + "/v2.0/users")
+                       .addHeader("Accept", MediaType.APPLICATION_JSON)
+                       .addHeader("X-Auth-Token", authToken).build(),
+            HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/user_add.json", APPLICATION_JSON)).build()
+      ).getUserApi().get();
+      User user = api.add("newuser", "new@new.com", true, "secrete");
+      assertNotNull(user);
+      assertEquals(user, User.builder().name("newuser").id("021dfd758eb44a89f1c57c8ef3be8e2").build());
+   }
+   
+   public void testDeleteUser() {
+      UserApi api = requestsSendResponses(
+            keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess,
+            HttpRequest.builder().method("DELETE")
+                       .endpoint(endpoint + "/v2.0/users/021dfd758eb44a89f1c57c8ef3be8e2")
+                       .addHeader("X-Auth-Token", authToken).build(),
+            HttpResponse.builder().statusCode(200).build()
+      ).getUserApi().get();
+      assertTrue(api.delete("021dfd758eb44a89f1c57c8ef3be8e2"));
+   }
+   
+   public void testDeleteUnknownUser() {
+      UserApi api = requestsSendResponses(
+            keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess,
+            HttpRequest.builder().method("DELETE")
+                       .endpoint(endpoint + "/v2.0/users/021dfd758eb44a89f1c57c8ef3be8e2")
+                       .addHeader("X-Auth-Token", authToken).build(),
+            HttpResponse.builder().statusCode(404).build()
+      ).getUserApi().get();
+      assertTrue(api.delete("021dfd758eb44a89f1c57c8ef3be8e2"));
+   }
 }
