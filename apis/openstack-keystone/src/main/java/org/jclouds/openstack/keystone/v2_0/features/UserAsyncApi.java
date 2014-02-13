@@ -77,7 +77,9 @@ public interface UserAsyncApi {
    @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
    ListenableFuture<? extends PagedIterable<? extends User>> list();
 
-   /** @see UserApi#list(PaginationOptions) */
+   /**
+    * @see UserApi#list(PaginationOptions)
+    */
    @Named("user:list")
    @GET
    @Consumes(MediaType.APPLICATION_JSON)
@@ -87,7 +89,9 @@ public interface UserAsyncApi {
    @Fallback(EmptyPaginatedCollectionOnNotFoundOr404.class)
    ListenableFuture<? extends PaginatedCollection<? extends User>> list(PaginationOptions options);
 
-   /** @see UserApi#get(String) */
+   /**
+    * @see UserApi#get(String)
+    */
    @Named("user:get")
    @GET
    @SelectJson("user")
@@ -97,7 +101,9 @@ public interface UserAsyncApi {
    @Fallback(NullOnNotFoundOr404.class)
    ListenableFuture<? extends User> get(@PathParam("userId") String userId);
 
-   /** @see UserApi#getByName(String) */
+   /**
+    * @see UserApi#getByName(String)
+    */
    @Named("user:get")
    @GET
    @SelectJson("user")
@@ -107,7 +113,9 @@ public interface UserAsyncApi {
    @Fallback(NullOnNotFoundOr404.class)
    ListenableFuture<? extends User> getByName(@QueryParam("name") String userName);
 
-   /** @see UserApi#listRolesOfUser(String) */
+   /**
+    * @see UserApi#listRolesOfUser(String)
+    */
    @Named("user:listroles")
    @GET
    @SelectJson("roles")
@@ -117,7 +125,9 @@ public interface UserAsyncApi {
    @Fallback(EmptySetOnNotFoundOr404.class)
    ListenableFuture<? extends Set<? extends Role>> listRolesOfUser(@PathParam("userId") String userId);
 
-   /** @see UserApi#listRolesOfUserOnTenant(String, String) */
+   /**
+    * @see UserApi#listRolesOfUserOnTenant(String, String)
+    */
    @Named("user:listroles")
    @GET
    @SelectJson("roles")
@@ -128,7 +138,9 @@ public interface UserAsyncApi {
    ListenableFuture<? extends Set<? extends Role>> listRolesOfUserOnTenant(@PathParam("userId") String userId,
             @PathParam("tenantId") String tenantId);
    
-   /** @see UserApi#add(String, String, Boolean, String) */
+   /**
+    * @see UserApi#add(String, String, Boolean, String)
+    */
    @Named("user:add")
    @POST
    @SelectJson("user")
@@ -141,7 +153,9 @@ public interface UserAsyncApi {
                                         @PayloadParam("enabled") boolean enabled,
                                         @PayloadParam("OS-KSADM:password") String password);
    
-   /** @see UserApi#delete(String) */
+   /**
+    * @see UserApi#delete(String)
+    */
    @Named("user:delete")
    @DELETE
    @Path("/users/{userId}")
