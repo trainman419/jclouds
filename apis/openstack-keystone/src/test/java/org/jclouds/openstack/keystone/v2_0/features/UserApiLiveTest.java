@@ -19,8 +19,10 @@ package org.jclouds.openstack.keystone.v2_0.features;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 import java.util.Set;
+import java.util.UUID;
 
 import org.jclouds.openstack.keystone.v2_0.domain.Role;
 import org.jclouds.openstack.keystone.v2_0.domain.Tenant;
@@ -85,5 +87,38 @@ public class UserApiLiveTest extends BaseKeystoneApiLiveTest {
          assertEquals(aUser, user);
       }
 
+   }
+   
+   public void testAddDeleteUser() {
+      UserApi userApi = api.getUserApi().get();
+      Set<? extends User> initialUsers = userApi.list().concat().toSet();
+       
+      // generate credentials for a random new user
+      //  this is similar to how tempest performs its user creation test
+      String randUser = "test_user_" + UUID.randomUUID().toString();
+      String email = "test@testmail.tm";
+      String password = "secrete";
+      
+      User newUser = userApi.add(randUser, email, true, password);
+      
+      // validate that our new user exists
+      Set<? extends User> newUsers = userApi.list().concat().toSet();
+      assertTrue(newUsers.contains(newUser));
+      
+      // validate that we can delete our user
+      assertTrue(userApi.delete(newUser.getId()));
+      
+      // validate that the user no longer exists
+      Set<? extends User> finalUsers = userApi.list().concat().toSet();
+      assertEquals(initialUsers, finalUsers);
+   }
+   
+   public void testDeleteInvalidUser() {
+      UserApi userApi = api.getUserApi().get();
+      String randUser = "definitelynotarealuserid";
+
+      // calling delete on a user that doesn't exist should return true
+      //  because the user no longer exists (and never did)
+      assertTrue(userApi.delete(randUser));
    }
 }
