@@ -82,7 +82,7 @@ public interface UserApi {
    Set<? extends Role> listRolesOfUserOnTenant(String userId, String tenantId);
 
    /**
-    * Create a new user in keystone.
+    * Creates a new user in keystone.
     * 
     * @param userName the name for the new user
     * @param userEmail the email address for the new user
@@ -93,7 +93,7 @@ public interface UserApi {
    User add(String userName, String userEmail, boolean enabled, String password);
     
    /**
-    * Delete a user by ID
+    * Deletes a user by ID
     * 
     * @param userId the user ID of the user to delete
     */
