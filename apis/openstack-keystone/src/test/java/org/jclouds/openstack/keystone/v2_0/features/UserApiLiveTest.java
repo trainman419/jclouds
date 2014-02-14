@@ -99,7 +99,7 @@ public class UserApiLiveTest extends BaseKeystoneApiLiveTest {
       String email = "test@testmail.tm";
       String password = "secrete";
       
-      User newUser = userApi.add(randUser, email, true, password);
+      User newUser = userApi.create(randUser, email, true, password);
       
       // validate that our new user exists
       Set<? extends User> newUsers = userApi.list().concat().toSet();

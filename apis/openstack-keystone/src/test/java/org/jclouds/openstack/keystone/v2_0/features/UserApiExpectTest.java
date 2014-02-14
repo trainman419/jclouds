@@ -201,7 +201,7 @@ public class UserApiExpectTest extends BaseKeystoneRestApiExpectTest<KeystoneApi
                        .addHeader("X-Auth-Token", authToken).build(),
             HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/user_add.json", APPLICATION_JSON)).build()
       ).getUserApi().get();
-      User user = api.add("newuser", "new@new.com", true, "secrete");
+      User user = api.create("newuser", "new@new.com", true, "secrete");
       assertNotNull(user);
       assertEquals(user, User.builder().name("newuser").id("021dfd758eb44a89f1c57c8ef3be8e2").build());
    }

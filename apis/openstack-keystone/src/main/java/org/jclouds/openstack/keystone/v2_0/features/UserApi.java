@@ -90,7 +90,7 @@ public interface UserApi {
     * @param password the password for the new user
     * @return the created User object
     */
-   User add(String userName, String userEmail, boolean enabled, String password);
+   User create(String userName, String userEmail, boolean enabled, String password);
     
    /**
     * Deletes a user by ID

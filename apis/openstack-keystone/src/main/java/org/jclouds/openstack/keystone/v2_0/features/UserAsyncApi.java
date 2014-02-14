@@ -48,8 +48,10 @@ import org.jclouds.rest.annotations.Transform;
 import com.google.common.util.concurrent.ListenableFuture;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
+import javax.ws.rs.Produces;
 import org.jclouds.Fallbacks.TrueOnNotFoundOr404;
 import org.jclouds.rest.annotations.PayloadParam;
+import org.jclouds.rest.annotations.WrapWith;
 
 /**
  * Provides asynchronous access to User via their REST API.
@@ -145,13 +147,15 @@ public interface UserAsyncApi {
    @POST
    @SelectJson("user")
    @Consumes(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.APPLICATION_JSON)
    @Path("/users")
    @RequestFilters(AuthenticateRequest.class)
    @Fallback(NullOnNotFoundOr404.class)
-   ListenableFuture<? extends User> add(@PayloadParam("username") String userName,
-                                        @PayloadParam("email") String userEmail,
-                                        @PayloadParam("enabled") boolean enabled,
-                                        @PayloadParam("OS-KSADM:password") String password);
+   @WrapWith("user")
+   ListenableFuture<? extends User> create(@PayloadParam("name") String userName,
+                                           @PayloadParam("email") String userEmail,
+                                           @PayloadParam("enabled") boolean enabled,
+                                           @PayloadParam("password") String password);
    
    /**
     * @see UserApi#delete(String)
