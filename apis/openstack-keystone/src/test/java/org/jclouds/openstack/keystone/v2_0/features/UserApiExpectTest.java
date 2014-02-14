@@ -198,7 +198,8 @@ public class UserApiExpectTest extends BaseKeystoneRestApiExpectTest<KeystoneApi
             HttpRequest.builder().method("POST")
                        .endpoint(endpoint + "/v2.0/users")
                        .addHeader("Accept", MediaType.APPLICATION_JSON)
-                       .addHeader("X-Auth-Token", authToken).build(),
+                       .addHeader("X-Auth-Token", authToken)
+                       .payload(payloadFromResourceWithContentType("/user_create.json", APPLICATION_JSON)).build(),
             HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/user_add.json", APPLICATION_JSON)).build()
       ).getUserApi().get();
       User user = api.create("newuser", "new@new.com", true, "secrete");
